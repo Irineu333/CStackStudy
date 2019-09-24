@@ -206,7 +206,8 @@ void menu(lista *l)
         printf("\n4.Mostrar tudo");
         printf("\n5.Renomear fila");
         printf("\n6.Excluir fila");
-        printf("\n7.Sair\n");
+        printf("\n7.Mudar tipo");
+        printf("\n8.Sair\n");
         scanf("%d",&op);
 
         switch(op)
@@ -232,6 +233,8 @@ void menu(lista *l)
         case 6:
             break;
         case 7:
+            break;
+        case 8:
             printf("\nSaindo da %s.\n", l->tipo);
             break;
         default:
@@ -240,7 +243,7 @@ void menu(lista *l)
 
         }
 
-    }while(op!=7);
+    }while(op!=8);
 }
 lista* aloca_lista()
 {
