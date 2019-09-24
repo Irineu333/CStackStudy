@@ -108,11 +108,11 @@ void lista_filas(lista *listas)
         {
             if(aux!=NULL)
             {
-                printf("\n[%d] %s (%s) | %d Registros | %d Kb", i, aux->endFila->nome, aux->endFila->tipo, aux->endFila->qtd, sizeof(registro)*(aux->endFila->qtd) + sizeof(lista));
+                printf("\n[%d] %s (%s) | %d Registros | %d Kb", i, aux->endFila->nome, aux->endFila->tipo, aux->endFila->qtd, (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista));
 
                 //Somando total
                 tam[0] += aux->endFila->qtd;
-                tam[1] += sizeof(registro)*(aux->endFila->qtd) + sizeof(lista);
+                tam[1] += (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista);
             }
             aux=aux->prox;
             i++;
@@ -179,7 +179,7 @@ void menu(lista *l)
     /*
         função para realizar operações dentro das filas
     */
-    printf("\n[>] %s (%s) | %d Registros | %d Kb\n", l->nome, l->tipo, l->qtd, sizeof(registro)*(l->qtd) + sizeof(lista));
+    printf("\n[>] %s (%s) | %d Registros | %d Kb\n", l->nome, l->tipo, l->qtd, (sizeof(registro)+sizeof(pessoa))*(l->qtd) + sizeof(lista));
     int op, tipo;
 
     if(!strcmp(l->tipo, "fila"))
