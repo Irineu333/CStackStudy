@@ -46,7 +46,7 @@ int main()
     int op;
     //compatibilidade com portugues
     setlocale(LC_ALL, "portuguese");
-    printf("\nGerenciador de pilhas e filas\n");
+    printf("\nGerenciador de Pilhas/Filas\n");
     //criando lista principal
     lista *listas;
     listas = aloca_lista();
@@ -62,7 +62,7 @@ int main()
         switch(op)
         {
         case 1:
-            printf("\n[+] Criar nova fila:");
+            printf("\n[+] Criar Fila/Pilha");
             inserir_fila(listas);
             break;
         case 2:
@@ -96,7 +96,7 @@ void lista_filas(lista *listas)
 
     if (listas->qtd==0)
     {
-        printf("\nA lista está vazia\n");
+        printf("\nA lista está vazia!\n");
     }
     else
     {
@@ -134,7 +134,7 @@ void inserir_fila(lista *listas)
 
     //recebendo
     printf("\n    Nome: "); fflush(stdin); fgets(temp->endFila->nome, 30, stdin); temp->endFila->nome[strlen(temp->endFila->nome)-1]='\0';
-    printf("    Tipo: (1) fila, (2) pilha: "); scanf("%d", &tipo);
+    do{ printf("    Tipo: (1) fila, (2) pilha: "); scanf("%d", &tipo); } while (tipo!= 1 && tipo !=2);
 
     //tipificador
     if(tipo==1)
@@ -145,6 +145,9 @@ void inserir_fila(lista *listas)
         if(tipo==2)
         {
             strcpy(temp->endFila->tipo, "pilha");
+        } else
+        {
+            printf("\nErro inesperado\n");
         }
     }
 
@@ -179,12 +182,20 @@ void menu(lista *l)
     printf("\n[>] %s (%s) | %d Registros | %d Kb\n", l->nome, l->tipo, l->qtd, sizeof(registro)*(l->qtd) + sizeof(lista));
     int op, tipo;
 
-    if(l->tipo=="fila")
+    if(!strcmp(l->tipo, "fila"))
     {
+
         tipo=1;
     } else
     {
-        tipo=2;
+
+        if(!strcmp(l->tipo, "pilha"))
+        {
+            tipo=2;
+        } else
+        {
+            printf("\nErro inesperado\n");
+        }
     }
 
     do
@@ -201,17 +212,18 @@ void menu(lista *l)
         switch(op)
         {
         case 1:
-            printf("\n[+] Criar Pessoa\n");
+            printf("\n[+] Criar Pessoa:\n");
             push(l);
             break;
         case 2:
+            printf("\nPop %s:\n", l->tipo);
             pop(l, tipo); //1 para fila e 2 para pilha
             break;
         case 3:
             stackpop(l, tipo);
             break;
         case 4:
-            printf("\nRegistros na memória\n");
+            printf("\nRegistros na memória:\n");
             mostrar_tudo(l);
             break;
         case 5:
@@ -445,19 +457,51 @@ pessoa* criar_pessoa()
 
     temp = (pessoa*)malloc(sizeof(pessoa));
 
-    printf("    Nome:"); fflush(stdin); fgets(temp->nome, 30, stdin); temp->nome[strlen(temp->nome)-1] = '\0';
-    printf("    Idade:"); scanf("%d", &temp->idade);
+    printf("    Nome: "); fflush(stdin); fgets(temp->nome, 30, stdin); temp->nome[strlen(temp->nome)-1] = '\0';
+    printf("    Idade: "); scanf("%d", &temp->idade);
 
     return temp;
 }
 void pop(lista *l, int tipo)
 {
+    registro *aux, *temp;
     if(l->qtd==0)
     {
-        printf("\nEstá %s está vazia\n", l->tipo);
+        printf("\nEstá %s está vazia!\n", l->tipo);
     } else
     {
+        if(tipo==2)
+        {
+            // tipo pilha, ultimo a entrar é primeiro a sair
+            aux = l->inicio;
+            while(aux->prox!=NULL)
+            {
+                temp=aux; //anterior
+                aux=aux->prox;
+            }
+            printf("\n%s, %d anos\n", aux->p->nome, aux->p->idade);
+            free(aux->p); //liberar pessoa desse registro
+            free(aux); //liberar esse registro
+            temp->prox=NULL; //retira endereço desse registro do registro anterior
+            //
+        } else
+        {
+            if(tipo==1)
+            {
+                // tipo pilha, primeiro a entrar é o primeiro a sair
+                aux = l->inicio;
+                printf("%s, %d anos\n", aux->p->nome, aux->p->idade);
+                l->inicio = aux->prox; //inicio recebe o proximo
+                free(aux->p); //libera pessoa
+                free(aux);
 
+                //
+            } else
+            {
+                printf("\nErro inesperado\n");
+            }
+        }
+        l->qtd--;
     }
 }
 void stackpop(lista *l, int tipo)
@@ -483,10 +527,7 @@ void mostrar_tudo(lista *l)
         aux=l->inicio;
         while(aux!=NULL)
         {
-            if(aux!=NULL)
-            {
-                printf("\n[%d] %s, %d anos", i, aux->p->nome, aux->p->idade);
-            }
+            printf("\n[%d] %s, %d anos", i, aux->p->nome, aux->p->idade);
             aux=aux->prox;
             i++;
         }
