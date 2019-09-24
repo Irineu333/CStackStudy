@@ -220,6 +220,7 @@ void menu(lista *l)
             pop(l, tipo); //1 para fila e 2 para pilha
             break;
         case 3:
+            printf("\nStackPop %s:\n", l->tipo);
             stackpop(l, tipo);
             break;
         case 4:
@@ -231,7 +232,7 @@ void menu(lista *l)
         case 6:
             break;
         case 7:
-            printf("\nSaindo da fila.\n");
+            printf("\nSaindo da %s.\n", l->tipo);
             break;
         default:
             printf("\nOpcao invalida!\n");
@@ -479,7 +480,7 @@ void pop(lista *l, int tipo)
                 temp=aux; //anterior
                 aux=aux->prox;
             }
-            printf("\n%s, %d anos\n", aux->p->nome, aux->p->idade);
+            printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
             free(aux->p); //liberar pessoa desse registro
             free(aux); //liberar esse registro
             temp->prox=NULL; //retira endereço desse registro do registro anterior
@@ -490,7 +491,7 @@ void pop(lista *l, int tipo)
             {
                 // tipo pilha, primeiro a entrar é o primeiro a sair
                 aux = l->inicio;
-                printf("%s, %d anos\n", aux->p->nome, aux->p->idade);
+                printf("%s, %d anos.\n", aux->p->nome, aux->p->idade);
                 l->inicio = aux->prox; //inicio recebe o proximo
                 free(aux->p); //libera pessoa
                 free(aux);
@@ -498,7 +499,7 @@ void pop(lista *l, int tipo)
                 //
             } else
             {
-                printf("\nErro inesperado\n");
+                printf("\nErro inesperado\n"); //Um erro inesperado é um erro que não estava no plano geral, que deveria ser impossivel de acontecer
             }
         }
         l->qtd--;
@@ -506,7 +507,38 @@ void pop(lista *l, int tipo)
 }
 void stackpop(lista *l, int tipo)
 {
+    registro *aux, *temp;
+    if(l->qtd==0)
+    {
+        printf("\nEstá %s está vazia!\n", l->tipo);
+    } else
+    {
+        if(tipo==2)
+        {
+            // tipo pilha, ultimo a entrar é primeiro a sair
+            aux = l->inicio;
+            while(aux->prox!=NULL)
+            {
+                temp=aux; //anterior
+                aux=aux->prox;
+            }
+            printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
+            //
+        } else
+        {
+            if(tipo==1)
+            {
+                // tipo pilha, primeiro a entrar é o primeiro a sair
+                aux = l->inicio;
+                printf("%s, %d anos.\n", aux->p->nome, aux->p->idade);
 
+                //
+            } else
+            {
+                printf("\nErro inesperado\n"); //Um erro inesperado é um erro que não estava no plano geral, que deveria ser impossivel de acontecer
+            }
+        }
+    }
 }
 void mostrar_tudo(lista *l)
 {
@@ -519,7 +551,7 @@ void mostrar_tudo(lista *l)
 
     if (l->qtd==0)
     {
-        printf("\nNenhum registro encontrado\n");
+        printf("\nNenhum registro encontrado.\n");
     }
     else
     {
@@ -527,7 +559,7 @@ void mostrar_tudo(lista *l)
         aux=l->inicio;
         while(aux!=NULL)
         {
-            printf("\n[%d] %s, %d anos", i, aux->p->nome, aux->p->idade);
+            printf("\n[%d] %s, %d anos.", i, aux->p->nome, aux->p->idade);
             aux=aux->prox;
             i++;
         }
