@@ -298,7 +298,7 @@ void abrir_fila (lista *listas)
         na verdade ela apenar gerencia o uso da função buscar_por_filas e menu,
         esse ultimo responsável pelas opreações realizadas dentro de uma fila
     */
-    lista *temp; int op, opr, y; char nome[30]; registro *aux, *ant_temp;
+    lista *temp; int op, y; char nome[30]; registro *aux, *ant_temp;
 
     printf("\nBuscar por:");
     printf("\n1.Nome\n2.Número\n"); scanf("%d", &op);
@@ -344,8 +344,8 @@ void abrir_fila (lista *listas)
             //verificar onde localização
             if(aux->prox==NULL)
             {
-                free(aux);
                 ant_temp->prox=NULL;
+                free(aux);
             } else
             {
                 ant_temp->prox=aux->prox;
