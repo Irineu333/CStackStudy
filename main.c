@@ -230,6 +230,8 @@ void menu(lista *l)
             mostrar_tudo(l);
             break;
         case 5:
+            printf("\nRenomear:");
+            renomear(l);
             break;
         case 6:
             break;
