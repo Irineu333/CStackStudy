@@ -240,8 +240,7 @@ int menu(lista *l)
             break;
         case 6:
             printf("\nExcluir %s:", l->tipo);
-            op=excluir_op(l);
-            if(op==1)
+            if(excluir_op(l))
             {
                 return 1;
             }
@@ -332,8 +331,8 @@ void abrir_fila (lista *listas)
         //printf("\nNão foi possivel abrir está lista\n");
     } else
     {
-        opr = menu(temp); //opr=0 nada; opr=1 lista/pilha excluida;
-        if(op==1)
+        //return 1=alguma lista/pilha foi escluída
+        if(menu(temp))
         {
             //limpando lista principal
             aux = listas->inicio;
