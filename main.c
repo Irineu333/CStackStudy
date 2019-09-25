@@ -174,13 +174,15 @@ void mostrar_tudo(lista *l);
 void pop(lista *l, int i);
 void stackpop(lista *l, int tipo);
 void renomear(lista *l);
+void mudar_tipo(lista *l);
+void info(lista *l);
 
 void menu(lista *l)
 {
     /*
         função para realizar operações dentro das filas
     */
-    printf("\n[>] %s (%s) | %d Registros | %d Kb\n", l->nome, l->tipo, l->qtd, (sizeof(registro)+sizeof(pessoa))*(l->qtd) + sizeof(lista));
+    info(l);
     int op, tipo;
 
     if(!strcmp(l->tipo, "fila"))
@@ -232,10 +234,15 @@ void menu(lista *l)
         case 5:
             printf("\nRenomear:");
             renomear(l);
+            info(l);
             break;
         case 6:
+
             break;
         case 7:
+            printf("\nMudar tipo:");
+            mudar_tipo(l);
+            info(l);
             break;
         case 8:
             printf("\nSaindo da %s.\n", l->tipo);
@@ -576,6 +583,59 @@ void mostrar_tudo(lista *l)
 void renomear(lista *l)
 {
     printf("\nNome Antigo: %s", l->nome);
-    printf("Novo nome: "); fflush(stdin); fgets(l->nome, 30, stdin); l->nome[strlen(l->nome)-1] = '\0';
-    printf("\nRenomeado para %s", l->nome);
+    printf("\nNovo nome: "); fflush(stdin); fgets(l->nome, 30, stdin); l->nome[strlen(l->nome)-1] = '\0';
+    printf("\nRenomeado para %s\n", l->nome);
+}
+void mudar_tipo(lista *l)
+{
+    int op;
+    printf("\nTipo Antigo: %s", l->tipo);
+    printf("\nAlterar para ");
+    if(!strcmp(l->tipo, "fila"))
+    {
+        printf("pilha? ");
+        do{
+            printf("(1) sim, (0) não: "); scanf("%d", &op);
+            if(op==1)
+            {
+                strcpy(l->tipo, "pilha");
+            } else
+            {
+                if(op==0)
+                {
+                    printf("\nOperação cancelada!\n");
+                    return;
+                }
+            }
+        } while (op!=0&&op!=1);
+    } else
+    {
+        if(!strcmp(l->tipo, "pilha"))
+        {
+            printf("fila? ");
+            do{
+                printf("(1) sim, (0) não: "); scanf("%d", &op);
+                if(op==1)
+                {
+                    strcpy(l->tipo, "fila");
+                } else
+                {
+                    if(op==0)
+                    {
+                        printf("\nOperação cancelada!\n");
+                        return;
+                    }
+                }
+            } while (op!=0&&op!=1);
+        } else
+        {
+            printf("[ERRO]\n\nErro inesperado\n");
+            return;
+        }
+    }
+    printf("\nAlterado para %s.\n", l->tipo);
+}
+void info(lista *l)
+{
+    printf("\n[>] %s (%s) | %d Registros | %d Kb\n", l->nome, l->tipo, l->qtd, (sizeof(registro)+sizeof(pessoa))*(l->qtd) + sizeof(lista));
 }
