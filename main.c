@@ -336,23 +336,36 @@ void abrir_fila (lista *listas)
         {
             //limpando lista principal
             aux = listas->inicio;
-            while(aux->endFila!=temp)
+            if(aux->prox==NULL) //verifica se é o primeiro e ultimo
             {
-                ant_temp=aux; //anterior
-                aux=aux->prox;
-            }
-            //verificar onde localização
-            if(aux->prox==NULL)
-            {
-                ant_temp->prox=NULL;
-                free(aux);
+                if(aux->endFila==temp)
+                {
+                    free(aux);
+                    listas->inicio=NULL;
+                } else
+                {
+                    printf("\nErro inesperado\n");
+                }
             } else
             {
-                ant_temp->prox=aux->prox;
-                free(aux);
+                if(aux->endFila!=temp)
+                {
+                    while(aux->endFila!=temp) //procura
+                    {
+                        ant_temp=aux; //anterior
+                        aux=aux->prox;
+                    }
+                    //verificar se é o ultimo
+                    ant_temp->prox=aux->prox;
+                    free(aux);
+                } else
+                {
+                    listas->inicio=aux->prox;
+                    free(aux);
+                }
             }
             listas->qtd--;
-            printf("\nLista principal limpa!\n");
+            printf("\nLimpo da lista principal!\n");
         }
     }
 
@@ -518,20 +531,30 @@ void pop(lista *l, int tipo)
         {
             // tipo pilha, ultimo a entrar é primeiro a sair
             aux = l->inicio;
-            while(aux->prox!=NULL)
+            if(aux->prox==NULL)
             {
-                temp=aux; //anterior
-                aux=aux->prox;
+                printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
+                l->inicio = NULL;
+                free(aux->p); //liberar pessoa desse registro
+                free(aux);
+            } else
+            {
+                while(aux->prox!=NULL)
+                {
+                    temp=aux; //anterior
+                    aux=aux->prox;
+                }
+                printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
+                free(aux->p); //liberar pessoa desse registro
+                free(aux); //liberar esse registro
+                temp->prox=NULL; //retira endereço desse registro do registro anterior
             }
-            printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
-            free(aux->p); //liberar pessoa desse registro
-            free(aux); //liberar esse registro
-            temp->prox=NULL; //retira endereço desse registro do registro anterior
-            //
+
         } else
         {
             if(tipo==1)
             {
+
                 // tipo pilha, primeiro a entrar é o primeiro a sair
                 aux = l->inicio;
                 printf("%s, %d anos.\n", aux->p->nome, aux->p->idade);
