@@ -110,7 +110,7 @@ void lista_filas(lista *listas)
         {
             if(aux!=NULL)
             {
-                printf("\n[%d] %s (%s) | %d Registros | %d Kb", i, aux->endFila->nome, aux->endFila->tipo, aux->endFila->qtd, (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista));
+                printf("\n[%d] %s (%s)\t| %d Registros | %d Kb", i, aux->endFila->nome, aux->endFila->tipo, aux->endFila->qtd, (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista));
 
                 //Somando total
                 tam[0] += aux->endFila->qtd; //quantidade total de registros
@@ -138,6 +138,7 @@ void inserir_fila(lista *listas)
     do{printf("    Nome: "); fflush(stdin); fgets(temp->endFila->nome, 30, stdin); temp->endFila->nome[strlen(temp->endFila->nome)-1]='\0';} while(strlen(temp->endFila->nome)==0);
     do{printf("    Tipo: (1) fila, (2) pilha: "); scanf("%d", &tipo);} while (tipo!=1 && tipo!=2);
 
+
     //tipificador
     if(tipo==1)
     {
@@ -152,6 +153,7 @@ void inserir_fila(lista *listas)
             printf("\nErro inesperado\n");
         }
     }
+    printf("    Nova %s criada!\n", temp->endFila->tipo);
 
     //estrutura padrão
     if(listas->inicio==NULL)
@@ -307,7 +309,7 @@ void abrir_fila (lista *listas)
     }
     else
     {
-        printf("\nBuscar: (1)Nome, (2)Número: "); scanf("%d", &op);
+        printf("\nBuscar: (1) Nome, (2) Número: "); scanf("%d", &op);
         if(op==1)
         {
             printf("Nome: ");
@@ -515,6 +517,7 @@ pessoa* criar_pessoa()
 
     do{printf("    Nome: "); fflush(stdin); fgets(temp->nome, 30, stdin); temp->nome[strlen(temp->nome)-1] = '\0';} while(!strlen(temp->nome));
     do{printf("    Idade: "); scanf("%d", &temp->idade);} while(temp->idade<1);
+    printf("    Nova pessoa criada!\n");
 
     return temp;
 }
