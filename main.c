@@ -677,6 +677,9 @@ void info(lista *l)
 void fun_free(registro *aux);
 int excluir_op(lista *l)
 {
+    /*
+        função para excluir pilhas/listas
+    */
     int op, i, qtd = l->qtd;
     registro *aux, *exc;
 
