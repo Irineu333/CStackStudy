@@ -110,7 +110,7 @@ void lista_filas(lista *listas)
         {
             if(aux!=NULL)
             {
-                printf("\n[%d] %s (%s)\t| %d Registros | %d Kb", i, aux->endFila->nome, aux->endFila->tipo, aux->endFila->qtd, (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista));
+                printf("\n[%d] %s (%s)| %d Registros | %d Kb", i, aux->endFila->nome, aux->endFila->tipo, aux->endFila->qtd, (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista));
 
                 //Somando total
                 tam[0] += aux->endFila->qtd; //quantidade total de registros
@@ -643,7 +643,7 @@ void renomear(lista *l)
         printf("Novo nome: "); fflush(stdin); fgets(l->nome, 30, stdin); l->nome[strlen(l->nome)-1] = '\0';
     } while (strlen(l->nome)==0);
 
-    printf("\nRenomeado para %s\n", l->nome);
+    printf("\nRenomeado para %s\n.", l->nome);
 }
 void mudar_tipo(lista *l)
 {
@@ -735,7 +735,10 @@ int excluir_op(lista *l)
 
 void fun_free(registro *aux)
 {
+    /*
+        função desalocar recursiva, limpa do fim até o endereço passado por parametro
 
+    */
     free(aux->p);
     free(aux);
 }
