@@ -173,6 +173,7 @@ void push(lista *l);
 void mostrar_tudo(lista *l);
 void pop(lista *l, int i);
 void stackpop(lista *l, int tipo);
+void renomear(lista *l);
 
 void menu(lista *l)
 {
@@ -570,7 +571,9 @@ void mostrar_tudo(lista *l)
     }
     printf("\nTotal: %d Registros | %d Kb\n",l->qtd, sizeof(registro)*l->qtd + sizeof(lista));
 }
-void renomear()
+void renomear(lista *l)
 {
-
+    printf("\nNome Antigo: %s", l->nome);
+    printf("Novo nome: "); fflush(stdin); fgets(l->nome, 30, stdin); l->nome[strlen(l->nome)-1] = '\0';
+    printf("\nRenomeado para %s", l->nome);
 }
