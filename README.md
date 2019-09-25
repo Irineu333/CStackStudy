@@ -1,2 +1,2 @@
 # Gerenciador de Pilha/Fila com lista
- Um gerenciador capaz de criar e gerenciar pilhas e filas em c, usando lista ligada/encadeada
+ Um gerenciador de filas e pilhas, capaz de criar e gerenciar pilhas e filas virtualmente infinitas em c
