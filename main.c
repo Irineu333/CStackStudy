@@ -85,6 +85,7 @@ int main()
     return 0;
 }
 //
+
 void lista_filas(lista *listas)
 {
     /*
@@ -111,8 +112,8 @@ void lista_filas(lista *listas)
                 printf("\n[%d] %s (%s) | %d Registros | %d Kb", i, aux->endFila->nome, aux->endFila->tipo, aux->endFila->qtd, (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista));
 
                 //Somando total
-                tam[0] += aux->endFila->qtd;
-                tam[1] += (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista);
+                tam[0] += aux->endFila->qtd; //quantidade total de registros
+                tam[1] += (sizeof(registro)+sizeof(pessoa))*(aux->endFila->qtd) + sizeof(lista); //quantidade total de kb
             }
             aux=aux->prox;
             i++;
@@ -131,10 +132,10 @@ void inserir_fila(lista *listas)
     registro *temp, *aux; int tipo;
     temp = aloca_registro();
     temp->endFila = aloca_lista(); //diferença mais fundamental da funão principal
-
+    printf("\n");
     //recebendo
-    printf("\n    Nome: "); fflush(stdin); fgets(temp->endFila->nome, 30, stdin); temp->endFila->nome[strlen(temp->endFila->nome)-1]='\0';
-    do{ printf("    Tipo: (1) fila, (2) pilha: "); scanf("%d", &tipo); } while (tipo!= 1 && tipo !=2);
+    do{printf("    Nome: "); fflush(stdin); fgets(temp->endFila->nome, 30, stdin); temp->endFila->nome[strlen(temp->endFila->nome)-1]='\0';} while(!strcmp(temp->endFila->nome, ""));
+    do{printf("    Tipo: (1) fila, (2) pilha: "); scanf("%d", &tipo);} while (tipo!=1 && tipo!=2);
 
     //tipificador
     if(tipo==1)
@@ -176,8 +177,9 @@ void stackpop(lista *l, int tipo);
 void renomear(lista *l);
 void mudar_tipo(lista *l);
 void info(lista *l);
+int excluir_op(lista *l);
 
-void menu(lista *l)
+int menu(lista *l)
 {
     /*
         função para realizar operações dentro das filas
@@ -232,12 +234,17 @@ void menu(lista *l)
             mostrar_tudo(l);
             break;
         case 5:
-            printf("\nRenomear:");
+            printf("\nRenomear %s:", l->tipo);
             renomear(l);
             info(l);
             break;
         case 6:
-
+            printf("\nExcluir %s:", l->tipo);
+            op=excluir_op(l);
+            if(op==1)
+            {
+                return 1;
+            }
             break;
         case 7:
             printf("\nMudar tipo:");
@@ -254,6 +261,8 @@ void menu(lista *l)
         }
 
     }while(op!=8);
+
+    return 0;
 }
 lista* aloca_lista()
 {
@@ -283,14 +292,14 @@ registro* aloca_registro()
     return temp;
 }
 //
-void abrir_fila (lista *l)
+void abrir_fila (lista *listas)
 {
     /*
         função responsavel por abrir filas
         na verdade ela apenar gerencia o uso da função buscar_por_filas e menu,
         esse ultimo responsável pelas opreações realizadas dentro de uma fila
     */
-    lista *temp; int op, y; char nome[30];
+    lista *temp; int op, opr, y; char nome[30]; registro *aux, *ant_temp;
 
     printf("\nBuscar por:");
     printf("\n1.Nome\n2.Número\n"); scanf("%d", &op);
@@ -298,7 +307,7 @@ void abrir_fila (lista *l)
     {
         printf("\nNome: ");
         fflush(stdin); fgets(nome, 30, stdin); nome[strlen(nome)-1] = '\0' /*removendo a quebra de linha*/;
-        temp = buscar_por_listas(l, nome, 0, 1);
+        temp = buscar_por_listas(listas, nome, 0, 1);
     } else
     {
         if(op==2)
@@ -306,7 +315,7 @@ void abrir_fila (lista *l)
             printf("\nNúmero: "); scanf("%d", &y);
             if(y>0)
             {
-                temp = buscar_por_listas(l, '\0', y, 2);
+                temp = buscar_por_listas(listas, '\0', y, 2);
             } else
             {
                 printf("\nInválido! Insira um número maior que zero.\n");
@@ -323,7 +332,29 @@ void abrir_fila (lista *l)
         //printf("\nNão foi possivel abrir está lista\n");
     } else
     {
-        menu(temp);
+        opr = menu(temp); //opr=0 nada; opr=1 lista/pilha excluida;
+        if(op==1)
+        {
+            //limpando lista principal
+            aux = listas->inicio;
+            while(aux->endFila!=temp)
+            {
+                ant_temp=aux; //anterior
+                aux=aux->prox;
+            }
+            //verificar onde localização
+            if(aux->prox==NULL)
+            {
+                free(aux);
+                ant_temp->prox=NULL;
+            } else
+            {
+                ant_temp->prox=aux->prox;
+                free(aux);
+            }
+            listas->qtd--;
+            printf("\nLista principal limpa!\n");
+        }
     }
 
 }
@@ -582,8 +613,12 @@ void mostrar_tudo(lista *l)
 }
 void renomear(lista *l)
 {
-    printf("\nNome Antigo: %s", l->nome);
-    printf("\nNovo nome: "); fflush(stdin); fgets(l->nome, 30, stdin); l->nome[strlen(l->nome)-1] = '\0';
+    printf("\nNome Antigo: %s\n", l->nome);
+    do
+    {
+        printf("Novo nome: "); fflush(stdin); fgets(l->nome, 30, stdin); l->nome[strlen(l->nome)-1] = '\0';
+    } while (!strcmp(l->nome, ""));
+
     printf("\nRenomeado para %s\n", l->nome);
 }
 void mudar_tipo(lista *l)
@@ -638,4 +673,42 @@ void mudar_tipo(lista *l)
 void info(lista *l)
 {
     printf("\n[>] %s (%s) | %d Registros | %d Kb\n", l->nome, l->tipo, l->qtd, (sizeof(registro)+sizeof(pessoa))*(l->qtd) + sizeof(lista));
+}
+void fun_free(registro *aux);
+int excluir_op(lista *l)
+{
+    int op, i, qtd = l->qtd;
+    registro *aux, *exc;
+
+    printf("\n");
+    do{printf("Certeza? (1) sim, (0) não: "); scanf("%d", &op);} while(op!=1 && op!=0);
+    if(op==1)
+    {
+        // excluir fila/pilha de lista
+        //vai ter que usar recursividade, porque preciso limpar do fim pro inicio
+        if(l->inicio!=NULL)//recebe primeiro registro
+        {
+            fun_free(l->inicio);
+        }
+        free(l);
+        printf("\nExcluído!\n");
+        return 1;
+    } else
+    {
+        if(op==0)
+        {
+            return 0;
+        } else
+        {
+            printf("\nErro inesperado\n");
+        }
+    }
+
+}
+
+void fun_free(registro *aux)
+{
+
+    free(aux->p);
+    free(aux);
 }
