@@ -31,14 +31,14 @@ typedef struct registro
     struct registro *prox;
 }registro;
 
-
+//declarações
 lista* aloca_lista();
 void inserir_fila(lista *listas);
 void lista_filas(lista *listas);
 void incluir_na_fila (lista *l, int x);
 registro* aloca_registro();
 void abrir_fila (lista *l);
-lista* buscar_por_listas (lista *l, char *x, int y, int op);
+lista* buscar_fun (lista *l, char *x, int y, int op);
 
 int main()
 {
@@ -46,7 +46,7 @@ int main()
     int op;
     //compatibilidade com portugues
     setlocale(LC_ALL, "portuguese");
-    printf("\nGerenciador de Pilhas/Filas\n");
+    printf("\nGer. Pilhas/Filas\n");
     //criando lista principal
     lista *listas;
     listas = aloca_lista();
@@ -66,10 +66,11 @@ int main()
             inserir_fila(listas);
             break;
         case 2:
+            printf("\nAbrir:\n");
             abrir_fila(listas);
             break;
         case 3:
-            printf("\nFilas na memória:\n");
+            printf("\nReg. na memória:\n");
             lista_filas(listas);
             break;
         case 4:
@@ -134,7 +135,7 @@ void inserir_fila(lista *listas)
     temp->endFila = aloca_lista(); //diferença mais fundamental da funão principal
     printf("\n");
     //recebendo
-    do{printf("    Nome: "); fflush(stdin); fgets(temp->endFila->nome, 30, stdin); temp->endFila->nome[strlen(temp->endFila->nome)-1]='\0';} while(!strcmp(temp->endFila->nome, ""));
+    do{printf("    Nome: "); fflush(stdin); fgets(temp->endFila->nome, 30, stdin); temp->endFila->nome[strlen(temp->endFila->nome)-1]='\0';} while(strlen(temp->endFila->nome)==0);
     do{printf("    Tipo: (1) fila, (2) pilha: "); scanf("%d", &tipo);} while (tipo!=1 && tipo!=2);
 
     //tipificador
@@ -299,126 +300,124 @@ void abrir_fila (lista *listas)
         esse ultimo responsável pelas opreações realizadas dentro de uma fila
     */
     lista *temp; int op, y; char nome[30]; registro *aux, *ant_temp;
-
-    printf("\nBuscar por:");
-    printf("\n1.Nome\n2.Número\n"); scanf("%d", &op);
-    if(op==1)
-    {
-        printf("\nNome: ");
-        fflush(stdin); fgets(nome, 30, stdin); nome[strlen(nome)-1] = '\0' /*removendo a quebra de linha*/;
-        temp = buscar_por_listas(listas, nome, 0, 1);
-    } else
-    {
-        if(op==2)
-        {
-            printf("\nNúmero: "); scanf("%d", &y);
-            if(y>0)
-            {
-                temp = buscar_por_listas(listas, '\0', y, 2);
-            } else
-            {
-                printf("\nInválido! Insira um número maior que zero.\n");
-                temp=NULL;
-            }
-        } else
-        {
-            printf("\nOpção inválida!\n");
-            temp=NULL;
-        }
-    }
-    if(temp==NULL)
-    {
-        //printf("\nNão foi possivel abrir está lista\n");
-    } else
-    {
-        //return 1=alguma lista/pilha foi escluída
-        if(menu(temp))
-        {
-            //limpando lista principal
-            aux = listas->inicio;
-            if(aux->prox==NULL) //verifica se é o primeiro e ultimo
-            {
-                if(aux->endFila==temp)
-                {
-                    free(aux);
-                    listas->inicio=NULL;
-                } else
-                {
-                    printf("\nErro inesperado\n");
-                }
-            } else
-            {
-                if(aux->endFila!=temp)
-                {
-                    while(aux->endFila!=temp) //procura
-                    {
-                        ant_temp=aux; //anterior
-                        aux=aux->prox;
-                    }
-                    //verificar se é o ultimo
-                    ant_temp->prox=aux->prox;
-                    free(aux);
-                } else
-                {
-                    listas->inicio=aux->prox;
-                    free(aux);
-                }
-            }
-            listas->qtd--;
-            printf("\nLimpo da lista principal!\n");
-        }
-    }
-
-}
-//
-int ver_igualdade(char *x, char *y);
-//
-lista* buscar_por_listas (lista *l, char *x, int y, int op)
-{
-    /*
-        função para realizar buscar dentro da lista principal, a lista de filas
-    */
-    registro *aux; int i=1;
-
-    if (l->qtd==0)
+    if (listas->qtd==0)
     {
         printf("\nA lista está vazia!\n");
         return NULL;
     }
     else
     {
-        aux = l->inicio;
+        printf("\nBuscar: (1)Nome, (2)Número: "); scanf("%d", &op);
         if(op==1)
         {
-            while(aux!=NULL)
-            {
-                if (ver_igualdade(x, aux->endFila->nome))
-                {
-                    printf("\nEncontrado, abrindo.\n");
-                    return aux->endFila; //retorna a cabeça da fila caso encontre x
-                }
-                aux=aux->prox;
-            }
+            printf("Nome: ");
+            do{fflush(stdin); fgets(nome, 30, stdin); nome[strlen(nome)-1] = '\0' /*removendo a quebra de linha*/;} while(strlen(nome)==0);
+            temp = buscar_fun(listas, nome, 0, 1);
         } else
         {
             if(op==2)
             {
-                //buscar pelo número informado
-                while(aux!=NULL)
+                printf("Número: "); scanf("%d", &y);
+                if(y>0)
                 {
-                    if(i==y)
-                    {
-                        printf("\nEncontrado, abrindo.\n");
-                        return aux->endFila;
-                    }
-                    aux=aux->prox;
-                    i++;
+                    temp = buscar_fun(listas, '\0', y, 2);
+                } else
+                {
+                    printf("\nInválido! Insira um número maior que zero.\n");
+                    temp=NULL;
                 }
+            } else
+            {
+                printf("\nOpção inválida!\n");
+                temp=NULL;
             }
         }
-        printf("\nNada encontrado!\n");
-        return NULL;
+        if(temp==NULL)
+        {
+            //printf("\nNão foi possivel abrir está lista\n");
+        } else
+        {
+            //return 1=alguma lista/pilha foi escluída
+            if(menu(temp))
+            {
+                //limpando lista principal
+                aux = listas->inicio;
+                if(aux->prox==NULL) //verifica se é o primeiro e ultimo
+                {
+                    if(aux->endFila==temp)
+                    {
+                        free(aux);
+                        listas->inicio=NULL;
+                    } else
+                    {
+                        printf("\nErro inesperado\n");
+                    }
+                } else
+                {
+                    if(aux->endFila!=temp)
+                    {
+                        while(aux->endFila!=temp) //procura
+                        {
+                            ant_temp=aux; //anterior
+                            aux=aux->prox;
+                        }
+                        //verificar se é o ultimo
+                        ant_temp->prox=aux->prox;
+                        free(aux);
+                    } else
+                    {
+                        listas->inicio=aux->prox;
+                        free(aux);
+                    }
+                }
+                listas->qtd--;
+                printf("\nLimpo da lista principal!\n");
+            }
+        }
     }
+
+}
+//
+int comparar(char *x, char *y);
+//
+lista* buscar_fun (lista *l, char *x, int y, int op)
+{
+    /*
+        função para realizar buscar dentro da lista principal, a lista de filas
+    */
+    registro *aux; int i=1;
+
+    aux = l->inicio;
+    if(op==1)
+    {
+        while(aux!=NULL)
+        {
+            if (comparar(x, aux->endFila->nome))
+            {
+                printf("\nEncontrado, abrindo.\n");
+                return aux->endFila; //retorna a cabeça da fila caso encontre x
+            }
+            aux=aux->prox;
+        }
+    } else
+    {
+        if(op==2)
+        {
+            //buscar pelo número informado
+            while(aux!=NULL)
+            {
+                if(i==y)
+                {
+                    printf("\nEncontrado, abrindo.\n");
+                    return aux->endFila;
+                }
+                aux=aux->prox;
+                i++;
+            }
+        }
+    }
+    printf("\nNada encontrado!\n");
+    return NULL;
 
 }
 //
@@ -449,7 +448,7 @@ void incluir_na_fila (lista *l, int x)
     }
      l->qtd++;
 }
-int ver_igualdade(char *x, char *y)
+int comparar(char *x, char *y)
 {
     /*
         função para verificar a igualdade entre duas array
@@ -514,8 +513,8 @@ pessoa* criar_pessoa()
 
     temp = (pessoa*)malloc(sizeof(pessoa));
 
-    printf("    Nome: "); fflush(stdin); fgets(temp->nome, 30, stdin); temp->nome[strlen(temp->nome)-1] = '\0';
-    printf("    Idade: "); scanf("%d", &temp->idade);
+    do{printf("    Nome: "); fflush(stdin); fgets(temp->nome, 30, stdin); temp->nome[strlen(temp->nome)-1] = '\0';} while(!strlen(temp->nome));
+    do{printf("    Idade: "); scanf("%d", &temp->idade);} while(temp->idade<1);
 
     return temp;
 }
@@ -635,18 +634,18 @@ void mostrar_tudo(lista *l)
 }
 void renomear(lista *l)
 {
-    printf("\nNome Antigo: %s\n", l->nome);
+    printf("\nNome antigo: %s.\n", l->nome);
     do
     {
         printf("Novo nome: "); fflush(stdin); fgets(l->nome, 30, stdin); l->nome[strlen(l->nome)-1] = '\0';
-    } while (!strcmp(l->nome, ""));
+    } while (strlen(l->nome)==0);
 
     printf("\nRenomeado para %s\n", l->nome);
 }
 void mudar_tipo(lista *l)
 {
     int op;
-    printf("\nTipo Antigo: %s", l->tipo);
+    printf("\nTipo antigo: %s.", l->tipo);
     printf("\nAlterar para ");
     if(!strcmp(l->tipo, "fila"))
     {
