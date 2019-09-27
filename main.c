@@ -10,8 +10,6 @@
     A ideia desse programa é ser um gerenciador de filas e pilhas, implementadas por listas (o que o torna virtualmente).
     Literalmente uma lista de listas, com dois menus de operação, um para a lista principal e outro para as secundárias que podem se comportar como filas ou pilhas,
     O comportamente das listas secundárias pode ser alterado alterando o tipo, e nelas podem ser adicionado e removido cadastro de pessoas, atravez de push e pop
-
-    Obs: o programa inicialemnte tinha a ideia de ser uma listas de filas, sendo adicionado o suporte a pilha posteriormente
 */
 
 
@@ -33,7 +31,7 @@ typedef struct pessoa
 typedef struct registro
 {
     pessoa *p;
-    lista *endFila; //endereço da lista
+    lista *endFila; //endereço da lista, usado apenas na lista principal para apontar para a cabeça da respectiva lista secundária, que pode se ruma fila ou pilha
     struct registro *prox;
 } registro;
 
@@ -46,7 +44,10 @@ char* e_texto(int tam)
     fflush(stdin); //uso não recomendado segundo alguns foruns, mas evita erros ralacionados ao buffer
     temp[strlen(temp)-1] = '\0'; //remove o \n que o fgets adiciona no final da string
 
-    //foi identificado um erro relacionado com o buffer quando o usuario digita mais que o temanho especificado, o fflush(stdin) corrige isso
+    /*
+     *  foi identificado um erro relacionado ao buffer quando o usuario digita mais que o temanho especificado, o uso do fflush(stdin) foi para corrigir isso
+     *
+     */
 
     return temp;
 }
@@ -156,13 +157,13 @@ void inserir_fila_pilha(lista *listas)
 {
     /*
        função exclusiva da lista principal
-       alocar novas listas (filas) para adicionar na lista principal
+       alocar novas listas (fila ou pilha) para adicionar na lista principal
     */
 
     registro *temp=NULL, *aux=NULL;
     int tipo=0;
     temp = aloca_registro();
-    temp->endFila = aloca_lista(); //diferença mais fundamental da funão principal
+    temp->endFila = aloca_lista(); //diferença mais fundamental da funão principal, permanece sempre null nas sevundarias
     printf("\n");
     //recebendo
     do
@@ -231,7 +232,7 @@ int excluir_op(lista *l);
 int menu(lista *l)
 {
     /*
-        função para realizar operações dentro das filas
+        função para realizar operações dentro das filas/pilhas
     */
     info(l);
     int op=0, tipo=0;
@@ -349,9 +350,9 @@ lista* buscar_fun (lista *l, char *x, int y, int op);
 void abrir_fila_pilha (lista *listas)
 {
     /*
-        função responsavel por abrir filas
+        função responsavel por abrir filas e pilhas
         na verdade ela apenar gerencia o uso da função buscar_por_filas e menu,
-        esse ultimo responsável pelas opreações realizadas dentro de uma fila
+        esse ultimo responsável pelas opreações realizadas dentro de uma fila,
     */
     lista *temp=NULL;
     int op=0, y=0;
@@ -556,7 +557,7 @@ void push(lista *l)
 pessoa* criar_pessoa()
 {
     /*
-        exclusiva para as filas
+        exclusiva para as filas/pilhas
         função para alocar e preencher formulário pessoa
     */
     pessoa *temp=NULL;
@@ -680,8 +681,9 @@ void stackpop(lista *l, int tipo)
 void mostrar_tudo(lista *l)
 {
     /*
-        função exclusiva para as filas
-        visa mostrar todos os resgistro dentro daquela fila
+        função exclusiva para as filas/pilhas
+        visa mostrar todos os resgistro dentro daquela fila/pilhas
+        para a lista principal a função tulizada é a listar
     */
     registro *aux=NULL;
     int i;
@@ -716,7 +718,7 @@ void renomear(lista *l)
     }
     while (strlen(l->nome)==0);
 
-    printf("\nRenomeado para %s\n.", l->nome);
+    printf("\nRenomeado para %s.\n", l->nome);
 }
 
 void mudar_tipo(lista *l)
