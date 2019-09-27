@@ -42,7 +42,7 @@ typedef struct registro
 //minhas funções pessoais de entrada
 char* e_texto(int tam)
 {
-    char *temp;
+    char *temp=NULL;
     temp=(char*)malloc(sizeof(char)*tam);
     fgets(temp, tam, stdin);
     fflush(stdin); //uso não recomendado segundo alguns foruns, mas evita erros ralacionados ao buffer
@@ -55,7 +55,7 @@ char* e_texto(int tam)
 
 int e_inteiro()
 {
-    int temp;
+    int temp=0;
     temp = atoi(e_texto(11));
 
     return temp;
@@ -73,12 +73,12 @@ lista* buscar_fun (lista *l, char *x, int y, int op);
 int main()
 {
     char tempText[30];
-    int op;
+    int op=0;
     //compatibilidade com portugues
     setlocale(LC_ALL, "portuguese");
     printf("\nGer. Pilhas/Filas\n");
     //criando lista principal
-    lista *listas;
+    lista *listas=NULL;
     listas = aloca_lista();
 
     do
@@ -124,7 +124,7 @@ void lista_filas(lista *listas)
        função exclusiva da lista principal
        listas as listas (filas) presentes na lista principal
     */
-    registro *aux;
+    registro *aux=NULL;
     int i=1, tam[2] = {0, 0};
 
     if (listas->qtd==0)
@@ -161,8 +161,8 @@ void inserir_fila(lista *listas)
        alocar novas listas (filas) para adicionar na lista principal
     */
 
-    registro *temp, *aux;
-    int tipo;
+    registro *temp=NULL, *aux=NULL;
+    int tipo=0;
     temp = aloca_registro();
     temp->endFila = aloca_lista(); //diferença mais fundamental da funão principal
     printf("\n");
@@ -234,7 +234,7 @@ int menu(lista *l)
         função para realizar operações dentro das filas
     */
     info(l);
-    int op, tipo;
+    int op=0, tipo=0;
 
     if(!strcmp(l->tipo, "fila"))
     {
@@ -305,7 +305,7 @@ int menu(lista *l)
             printf("\nSaindo da %s.\n", l->tipo);
             break;
         default:
-            printf("\nOpcao invalida!\n");
+            printf("\nOpcão inválida!\n");
             break;
 
         }
@@ -320,7 +320,7 @@ lista* aloca_lista()
     /*
         alocador universal de listas, mais especificamente a cabeça da lista
     */
-    lista *temp;
+    lista *temp=NULL;
     temp =(lista*)malloc(sizeof(lista));
     temp->qtd=0;
     temp->tipo[0]='\0';
@@ -335,7 +335,7 @@ registro* aloca_registro()
     /*
         alocador universal de registros
     */
-    registro *temp;
+    registro *temp=NULL;
     temp =(registro*)malloc(sizeof(registro));
     temp->p = NULL;
     temp->endFila=NULL; //estrutura preenchida apela na lista principal
@@ -350,10 +350,10 @@ void abrir_fila (lista *listas)
         na verdade ela apenar gerencia o uso da função buscar_por_filas e menu,
         esse ultimo responsável pelas opreações realizadas dentro de uma fila
     */
-    lista *temp;
-    int op, y;
+    lista *temp=NULL;
+    int op=0, y=0;
     char nome[30];
-    registro *aux, *ant_temp;
+    registro *aux=NULL, *ant_temp=NULL;
     if (listas->qtd==0)
     {
         printf("\nA lista está vazia!\n");
@@ -452,7 +452,7 @@ lista* buscar_fun (lista *l, char *x, int y, int op)
     /*
         função para realizar buscar dentro da lista principal, a lista de filas/pilhas
     */
-    registro *aux;
+    registro *aux=NULL;
     int i=1;
 
     aux = l->inicio;
@@ -498,7 +498,7 @@ void incluir_na_fila (lista *l, int x)
 
         [!] não pode receber o endereno da lista principal
     */
-    registro *temp, *aux;
+    registro *temp=NULL, *aux=NULL;
     temp = aloca_registro();
 
     if (l->inicio==NULL)
@@ -551,7 +551,7 @@ void push(lista *l)
     */
     pessoa *x = criar_pessoa(); //criar pessoa
 
-    registro *temp, *aux;
+    registro *temp=NULL, *aux=NULL;
     temp = (registro*)malloc(sizeof(registro));
     temp->endFila = NULL;
     temp->prox = NULL;
@@ -580,8 +580,8 @@ pessoa* criar_pessoa()
         exclusiva para as filas
         função para alocar e preencher formulário pessoa
     */
-    pessoa *temp;
-    int tipo;
+    pessoa *temp=NULL;
+    int tipo=0;
 
     temp = (pessoa*)malloc(sizeof(pessoa));
 
@@ -603,7 +603,7 @@ pessoa* criar_pessoa()
 }
 void pop(lista *l, int tipo)
 {
-    registro *aux, *temp;
+    registro *aux=NULL, *temp=NULL;
     if(l->qtd==0)
     {
         printf("\nEstá %s está vazia!\n", l->tipo);
@@ -659,7 +659,7 @@ void pop(lista *l, int tipo)
 }
 void stackpop(lista *l, int tipo)
 {
-    registro *aux, *temp;
+    registro *aux=NULL, *temp=NULL;
     if(l->qtd==0)
     {
         printf("\nEstá %s está vazia!\n", l->tipo);
@@ -701,8 +701,8 @@ void mostrar_tudo(lista *l)
         função exclusiva para as filas
         visa mostrar todos os resgistro dentro daquela fila
     */
-    registro *aux;
-    int i=1;
+    registro *aux=NULL;
+    int i;
 
     if (l->qtd==0)
     {
@@ -712,6 +712,7 @@ void mostrar_tudo(lista *l)
     {
 
         aux=l->inicio;
+        i=1;
         while(aux!=NULL)
         {
             printf("\n[%d] %s, %d anos.", i, aux->p->nome, aux->p->idade);
@@ -736,7 +737,7 @@ void renomear(lista *l)
 }
 void mudar_tipo(lista *l)
 {
-    int op;
+    int op=-1;
     printf("\nTipo antigo: %s.", l->tipo);
     printf("\nAlterar para ");
     if(!strcmp(l->tipo, "fila"))
@@ -805,8 +806,8 @@ int excluir_op(lista *l)
     /*
         função para excluir pilhas/listas
     */
-    int op, i, qtd = l->qtd;
-    registro *aux, *exc;
+    int op=0, i=-1, qtd = l->qtd;
+    registro *aux=NULL, *exc=NULL;
 
     printf("\n");
     do
