@@ -14,6 +14,8 @@
     Obs: o programa inicialemnte tinha a ideia de ser uma listas de filas, sendo adicionado o suporte a pilha posteriormente
 */
 
+
+//structs
 typedef struct lista
 {
     int qtd;
@@ -34,6 +36,30 @@ typedef struct registro
     lista *endFila; //endereço da lista
     struct registro *prox;
 } registro;
+
+///foi incorporado minhas funções pessoais de entrada, que podem ser encontradas em https://github.com/Irineu333/Funcoes-de-Entrada-Perfeitas
+
+//minhas funções pessoais de entrada
+char* e_texto(int tam)
+{
+    char *temp;
+    temp=(char*)malloc(sizeof(char)*tam);
+    fgets(temp, tam, stdin);
+    fflush(stdin); //uso não recomendado segundo alguns foruns, mas evita erros ralacionados ao buffer
+    temp[strlen(temp)-1] = '\0';
+
+    //foi identificado um erro relacionado com o buffer quando o usuario digita mais que o temanho especificado, o fflush(stdin) corrige isso
+
+    return temp;
+}
+
+int e_inteiro()
+{
+    int temp;
+    temp = atoi(e_texto(11));
+
+    return temp;
+}
 
 //declarações
 lista* aloca_lista();
@@ -61,7 +87,7 @@ int main()
         printf("\n2.Abrir");
         printf("\n3.Listar");
         printf("\n4.Sair\n");
-        scanf("%d", &op);
+        op=e_inteiro();
 
         switch(op)
         {
@@ -144,15 +170,13 @@ void inserir_fila(lista *listas)
     do
     {
         printf("    Nome: ");
-        fflush(stdin);
-        fgets(temp->endFila->nome, 30, stdin);
-        temp->endFila->nome[strlen(temp->endFila->nome)-1]='\0';
+        strcpy(temp->endFila->nome, e_texto(30));
     }
     while(strlen(temp->endFila->nome)==0);
     do
     {
         printf("    Tipo: (1) fila, (2) pilha: ");
-        scanf("%d", &tipo);
+        tipo=e_inteiro();
     }
     while (tipo!=1 && tipo!=2);
 
@@ -240,7 +264,7 @@ int menu(lista *l)
         printf("\n6.Excluir fila");
         printf("\n7.Mudar tipo");
         printf("\n8.Sair\n");
-        scanf("%d",&op);
+        op=e_inteiro();
 
         switch(op)
         {
@@ -338,15 +362,13 @@ void abrir_fila (lista *listas)
     else
     {
         printf("\nBuscar: (1) Nome, (2) Número: ");
-        scanf("%d", &op);
+        op=e_inteiro();
         if(op==1)
         {
             printf("Nome: ");
             do
             {
-                fflush(stdin);
-                fgets(nome, 30, stdin);
-                nome[strlen(nome)-1] = '\0' /*removendo a quebra de linha*/;
+                strcpy(nome, e_texto(30));
             }
             while(strlen(nome)==0);
             temp = buscar_fun(listas, nome, 0, 1);
@@ -356,7 +378,7 @@ void abrir_fila (lista *listas)
             if(op==2)
             {
                 printf("Número: ");
-                scanf("%d", &y);
+                y=e_inteiro();
                 if(y>0)
                 {
                     temp = buscar_fun(listas, '\0', y, 2);
@@ -566,15 +588,13 @@ pessoa* criar_pessoa()
     do
     {
         printf("    Nome: ");
-        fflush(stdin);
-        fgets(temp->nome, 30, stdin);
-        temp->nome[strlen(temp->nome)-1] = '\0';
+        strcpy(temp->nome, e_texto(30));
     }
     while(!strlen(temp->nome));
     do
     {
         printf("    Idade: ");
-        scanf("%d", &temp->idade);
+        temp->idade=e_inteiro();
     }
     while(temp->idade<1);
     printf("    Nova pessoa criada!\n");
@@ -708,9 +728,7 @@ void renomear(lista *l)
     do
     {
         printf("Novo nome: ");
-        fflush(stdin);
-        fgets(l->nome, 30, stdin);
-        l->nome[strlen(l->nome)-1] = '\0';
+        strcpy(l->nome, e_texto(30));
     }
     while (strlen(l->nome)==0);
 
@@ -727,7 +745,7 @@ void mudar_tipo(lista *l)
         do
         {
             printf("(1) sim, (0) não: ");
-            scanf("%d", &op);
+            op=e_inteiro();
             if(op==1)
             {
                 strcpy(l->tipo, "pilha");
@@ -751,7 +769,7 @@ void mudar_tipo(lista *l)
             do
             {
                 printf("(1) sim, (0) não: ");
-                scanf("%d", &op);
+                op=e_inteiro();
                 if(op==1)
                 {
                     strcpy(l->tipo, "fila");
@@ -794,7 +812,7 @@ int excluir_op(lista *l)
     do
     {
         printf("Certeza? (1) sim, (0) não: ");
-        scanf("%d", &op);
+        op=e_inteiro();
     }
     while(op!=1 && op!=0);
     if(op==1)
