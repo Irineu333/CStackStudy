@@ -293,7 +293,7 @@ int menu(lista *l)
             printf("\nExcluir %s:", l->tipo);
             if(excluir_op(l))
             {
-                return 1;
+                return 1; //retornar 1 para limpar a lista principal, do qual essa função não tem acesso
             }
             break;
         case 7:
@@ -401,7 +401,7 @@ void abrir_fila (lista *listas)
         }
         else
         {
-            //return 1=alguma lista/pilha foi escluída
+            //return 1=alguma lista/pilha foi excluída
             if(menu(temp))
             {
                 //limpando lista principal
