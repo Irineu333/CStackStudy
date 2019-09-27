@@ -46,7 +46,7 @@ char* e_texto(int tam)
 
     /*
      *  foi identificado um erro relacionado ao buffer quando o usuario digita mais que o temanho especificado, o uso do fflush(stdin) foi para corrigir isso
-     *
+     *  o fgets não deixa lixo no buffer exceto quando o texto inserido excede o tamanho especificado, mas o scanf por outro lado sempre deixa, o uso do fflush(stdin) também problemas com isso
      */
 
     return temp;
