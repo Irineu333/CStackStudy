@@ -7,7 +7,7 @@
 
 /*  Gerenciador de Filas/Pilhas com listas
 
-    A ideia desse programa é ser um gerenciador de filas e pilhas, implementadas por listas.
+    A ideia desse programa é ser um gerenciador de filas e pilhas, implementadas por listas (o que o torna virtualmente).
     Literalmente uma lista de listas, com dois menus de operação, um para a lista principal e outro para as secundárias que podem se comportar como filas ou pilhas,
     O comportamente das listas secundárias pode ser alterado alterando o tipo, e nelas podem ser adicionado e removido cadastro de pessoas, atravez de push e pop
 
@@ -16,7 +16,7 @@
 
 
 //structs
-typedef struct lista
+typedef struct lista //cabeça da lista
 {
     int qtd;
     char nome[30];
@@ -37,16 +37,14 @@ typedef struct registro
     struct registro *prox;
 } registro;
 
-///foi incorporado minhas funções pessoais de entrada, que podem ser encontradas em https://github.com/Irineu333/Funcoes-de-Entrada-Perfeitas
-
-//minhas funções pessoais de entrada
+//minhas funções pessoais de entrada, imuneis aos erros comuns do fgets e scanf, podem ser encontradas em https://github.com/Irineu333/Funcoes-de-Entrada-Perfeitas
 char* e_texto(int tam)
 {
     char *temp=NULL;
     temp=(char*)malloc(sizeof(char)*tam);
     fgets(temp, tam, stdin);
     fflush(stdin); //uso não recomendado segundo alguns foruns, mas evita erros ralacionados ao buffer
-    temp[strlen(temp)-1] = '\0';
+    temp[strlen(temp)-1] = '\0'; //remove o \n que o fgets adiciona no final da string
 
     //foi identificado um erro relacionado com o buffer quando o usuario digita mais que o temanho especificado, o fflush(stdin) corrige isso
 
@@ -56,19 +54,19 @@ char* e_texto(int tam)
 int e_inteiro()
 {
     int temp=0;
-    temp = atoi(e_texto(11));
+    temp = atoi(e_texto(11)); //função atoi converte char para int, e atof de char para float
 
     return temp;
 }
 
-//declarações
+//declarações das funções padrão de listas
 lista* aloca_lista();
-void inserir_fila(lista *listas);
-void lista_filas(lista *listas);
-void incluir_na_fila (lista *l, int x);
 registro* aloca_registro();
-void abrir_fila (lista *l);
-lista* buscar_fun (lista *l, char *x, int y, int op);
+
+//declarações para uso no main
+void inserir_fila_pilha(lista *listas);
+void listar(lista *listas);
+void abrir_fila_pilha(lista *l);
 
 int main()
 {
@@ -76,7 +74,6 @@ int main()
     int op=0;
     //compatibilidade com portugues
     setlocale(LC_ALL, "portuguese");
-    printf("\nGer. Pilhas/Filas\n");
     //criando lista principal
     lista *listas=NULL;
     listas = aloca_lista();
@@ -93,15 +90,15 @@ int main()
         {
         case 1:
             printf("\n[+] Criar Fila/Pilha");
-            inserir_fila(listas);
+            inserir_fila_pilha(listas);
             break;
         case 2:
             printf("\nAbrir:\n");
-            abrir_fila(listas);
+            abrir_fila_pilha(listas);
             break;
         case 3:
             printf("\nReg. na memória:\n");
-            lista_filas(listas);
+            listar(listas);
             break;
         case 4:
             printf("\nSaindo do programa.");
@@ -116,9 +113,9 @@ int main()
 
     return 0;
 }
-//
 
-void lista_filas(lista *listas)
+//abaixo funções da lista principal
+void listar(lista *listas)
 {
     /*
        função exclusiva da lista principal
@@ -154,7 +151,8 @@ void lista_filas(lista *listas)
     }
     printf("\nTotal: %d Filas/Pilhas | %d Registros | %d Kb\n",listas->qtd, tam[0], tam[1] + sizeof(lista)); //exibindo total
 }
-void inserir_fila(lista *listas)
+
+void inserir_fila_pilha(lista *listas)
 {
     /*
        função exclusiva da lista principal
@@ -218,11 +216,13 @@ void inserir_fila(lista *listas)
     listas->qtd++;
 }
 
-//declarações
+//declarações funções padrão de pilhas/filas, para usar no menu
 void push(lista *l);
 void mostrar_tudo(lista *l);
 void pop(lista *l, int i);
 void stackpop(lista *l, int tipo);
+
+//declarações para usar no menu
 void renomear(lista *l);
 void mudar_tipo(lista *l);
 void info(lista *l);
@@ -342,8 +342,11 @@ registro* aloca_registro()
     temp->prox = NULL;
     return temp;
 }
-//
-void abrir_fila (lista *listas)
+
+//declrações para usar na função abrir pilha/fila
+lista* buscar_fun (lista *l, char *x, int y, int op);
+
+void abrir_fila_pilha (lista *listas)
 {
     /*
         função responsavel por abrir filas
@@ -444,9 +447,10 @@ void abrir_fila (lista *listas)
     }
 
 }
-//
+
+//declarações para usar na função buscar
 int comparar(char *x, char *y);
-//
+
 lista* buscar_fun (lista *l, char *x, int y, int op)
 {
     /*
@@ -489,34 +493,7 @@ lista* buscar_fun (lista *l, char *x, int y, int op)
     return NULL;
 
 }
-//
-void incluir_na_fila (lista *l, int x)
-{
-    /*
-        função exclusiva para inserir conteúdo numa fila especifica,
-        ela deve receber o endereço da lista dessa respectiva fila,
 
-        [!] não pode receber o endereno da lista principal
-    */
-    registro *temp=NULL, *aux=NULL;
-    temp = aloca_registro();
-
-    if (l->inicio==NULL)
-    {
-        l->inicio=temp;
-    }
-    else
-    {
-        aux = l->inicio;
-        while(aux->prox!=NULL)
-        {
-            aux=aux->prox;
-        }
-        aux->prox = temp;
-
-    }
-    l->qtd++;
-}
 int comparar(char *x, char *y)
 {
     /*
@@ -542,7 +519,9 @@ int comparar(char *x, char *y)
     Basicamente as funções exclusiva para as filas
 */
 
+//declarações para usar na função push
 pessoa* criar_pessoa();
+
 void push(lista *l)
 {
     /*
@@ -601,6 +580,7 @@ pessoa* criar_pessoa()
 
     return temp;
 }
+
 void pop(lista *l, int tipo)
 {
     registro *aux=NULL, *temp=NULL;
@@ -657,6 +637,7 @@ void pop(lista *l, int tipo)
         l->qtd--;
     }
 }
+
 void stackpop(lista *l, int tipo)
 {
     registro *aux=NULL, *temp=NULL;
@@ -695,6 +676,7 @@ void stackpop(lista *l, int tipo)
         }
     }
 }
+
 void mostrar_tudo(lista *l)
 {
     /*
@@ -723,6 +705,7 @@ void mostrar_tudo(lista *l)
     }
     printf("\nTotal: %d Registros | %d Kb\n",l->qtd, sizeof(registro)*l->qtd + sizeof(lista));
 }
+
 void renomear(lista *l)
 {
     printf("\nNome antigo: %s.\n", l->nome);
@@ -735,6 +718,7 @@ void renomear(lista *l)
 
     printf("\nRenomeado para %s\n.", l->nome);
 }
+
 void mudar_tipo(lista *l)
 {
     int op=-1;
@@ -798,9 +782,10 @@ void info(lista *l)
 {
     printf("\n[>] %s (%s) | %d Registros | %d Kb\n", l->nome, l->tipo, l->qtd, (sizeof(registro)+sizeof(pessoa))*(l->qtd) + sizeof(lista));
 }
-//
+
+//declarações para usar na função excluir com opções
 void fun_free(registro *aux);
-//
+
 int excluir_op(lista *l)
 {
     /*
