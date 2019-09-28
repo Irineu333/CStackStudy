@@ -6,15 +6,14 @@
 //Irineu A. Silva
 
 /*  Gerenciador de Filas/Pilhas com listas
-
-    A ideia desse programa é ser um gerenciador de filas e pilhas, implementadas por listas (o que o torna virtualmente).
-    Literalmente uma lista de listas, com dois menus de operação, um para a lista principal e outro para as secundárias que podem se comportar como filas ou pilhas,
-    O comportamente das listas secundárias pode ser alterado alterando o tipo, e nelas podem ser adicionado e removido cadastro de pessoas, atravez de push e pop
+    A ideia desse programa Ã© ser um gerenciador de filas e pilhas, implementadas por listas (o que o torna virtualmente).
+    Literalmente uma lista de listas, com dois menus de operaÃ§Ã£o, um para a lista principal e outro para as secundÃ¡rias que podem se comportar como filas ou pilhas,
+    O comportamente das listas secundÃ¡rias pode ser alterado alterando o tipo, e nelas podem ser adicionado e removido cadastro de pessoas, atravez de push e pop
 */
 
 
 //structs
-typedef struct lista //cabeça da lista
+typedef struct lista //cabeÃ§a da lista
 {
     int qtd;
     char nome[30];
@@ -31,22 +30,22 @@ typedef struct pessoa
 typedef struct registro
 {
     pessoa *p;
-    lista *endFila; //endereço da lista, usado apenas na lista principal para apontar para a cabeça da respectiva lista secundária, que pode se ruma fila ou pilha
+    lista *endFila; //endereÃ§o da lista, usado apenas na lista principal para apontar para a cabeÃ§a da respectiva lista secundÃ¡ria, que pode se ruma fila ou pilha
     struct registro *prox;
 } registro;
 
-//minhas funções pessoais de entrada, imuneis aos erros comuns do fgets e scanf, podem ser encontradas em https://github.com/Irineu333/Funcoes-de-Entrada-Perfeitas
+//minhas funÃ§Ãµes pessoais de entrada, imuneis aos erros comuns do fgets e scanf, podem ser encontradas em https://github.com/Irineu333/Funcoes-de-Entrada-Perfeitas
 char* e_texto(int tam)
 {
     char *temp=NULL;
     temp=(char*)malloc(sizeof(char)*tam);
     fgets(temp, tam, stdin);
-    fflush(stdin); //uso não recomendado segundo alguns foruns, mas evita erros ralacionados ao buffer
+    fflush(stdin); //uso nÃ£o recomendado segundo alguns foruns, mas evita erros ralacionados ao buffer
     temp[strlen(temp)-1] = '\0'; //remove o \n que o fgets adiciona no final da string
 
     /*
      *  foi identificado um erro relacionado ao buffer quando o usuario digita mais que o temanho especificado, o uso do fflush(stdin) foi para corrigir isso
-     *  o fgets não deixa lixo no buffer exceto quando o texto inserido excede o tamanho especificado, mas o scanf por outro lado sempre deixa, o uso do fflush(stdin) também problemas com isso
+     *  o fgets nÃ£o deixa lixo no buffer exceto quando o texto inserido excede o tamanho especificado, mas o scanf por outro lado sempre deixa, o uso do fflush(stdin) tambÃ©m problemas com isso
      */
 
     return temp;
@@ -55,16 +54,16 @@ char* e_texto(int tam)
 int e_inteiro()
 {
     int temp=0;
-    temp = atoi(e_texto(11)); //função atoi converte char para int, e atof de char para float
+    temp = atoi(e_texto(11)); //funÃ§Ã£o atoi converte char para int, e atof de char para float
 
     return temp;
 }
 
-//declarações das funções padrão de listas
+//declaraÃ§Ãµes das funÃ§Ãµes padrÃ£o de listas
 lista* aloca_lista();
 registro* aloca_registro();
 
-//declarações para uso no main
+//declaraÃ§Ãµes para uso no main
 void inserir_fila_pilha(lista *listas);
 void listar(lista *listas);
 void abrir_fila_pilha(lista *l);
@@ -98,14 +97,14 @@ int main()
             abrir_fila_pilha(listas);
             break;
         case 3:
-            printf("\nReg. na memória:\n");
+            printf("\nReg. na memÃ³ria:\n");
             listar(listas);
             break;
         case 4:
             printf("\nSaindo do programa.");
             break;
         default:
-            printf("\nOpcão inválida!\n");
+            printf("\nOpcÃ£o invÃ¡lida!\n");
             break;
         }
 
@@ -115,11 +114,11 @@ int main()
     return 0;
 }
 
-//abaixo funções da lista principal
+//abaixo funÃ§Ãµes da lista principal
 void listar(lista *listas)
 {
     /*
-       função exclusiva da lista principal
+       funÃ§Ã£o exclusiva da lista principal
        listas as listas (filas) presentes na lista principal
     */
     registro *aux=NULL;
@@ -127,7 +126,7 @@ void listar(lista *listas)
 
     if (listas->qtd==0)
     {
-        printf("\nA lista está vazia!\n");
+        printf("\nA lista estÃ¡ vazia!\n");
     }
     else
     {
@@ -156,14 +155,14 @@ void listar(lista *listas)
 void inserir_fila_pilha(lista *listas)
 {
     /*
-       função exclusiva da lista principal
+       funÃ§Ã£o exclusiva da lista principal
        alocar novas listas (fila ou pilha) para adicionar na lista principal
     */
 
     registro *temp=NULL, *aux=NULL;
     int tipo=0;
     temp = aloca_registro();
-    temp->endFila = aloca_lista(); //diferença mais fundamental da funão principal, permanece sempre null nas sevundarias
+    temp->endFila = aloca_lista(); //diferenÃ§a mais fundamental da funÃ£o principal, permanece sempre null nas sevundarias
     printf("\n");
     //recebendo
     do
@@ -198,7 +197,7 @@ void inserir_fila_pilha(lista *listas)
     }
     printf("    Nova %s criada!\n", temp->endFila->tipo);
 
-    //estrutura padrão
+    //estrutura padrÃ£o
     if(listas->inicio==NULL)
     {
         listas->inicio=temp;
@@ -208,7 +207,7 @@ void inserir_fila_pilha(lista *listas)
         aux = listas->inicio;
         while(aux->prox!=NULL)
         {
-            aux=aux->prox; //estrutura padrão para avançar pela lista
+            aux=aux->prox; //estrutura padrÃ£o para avanÃ§ar pela lista
         }
         aux->prox = temp;
 
@@ -217,43 +216,28 @@ void inserir_fila_pilha(lista *listas)
     listas->qtd++;
 }
 
-//declarações funções padrão de pilhas/filas, para usar no menu
+//declaraÃ§Ãµes funÃ§Ãµes padrÃ£o de pilhas/filas, para usar no menu
 void push(lista *l);
 void mostrar_tudo(lista *l);
 void pop(lista *l, int i);
 void stackpop(lista *l, int tipo);
 
-//declarações para usar no menu
+//declaraÃ§Ãµes para usar no menu
 void renomear(lista *l);
 void mudar_tipo(lista *l);
 void info(lista *l);
 int excluir_op(lista *l);
+int tipificador(lista *l);
 
 int menu(lista *l)
 {
     /*
-        função para realizar operações dentro das filas/pilhas
+        funÃ§Ã£o para realizar operaÃ§Ãµes dentro das filas/pilhas
     */
     info(l);
     int op=0, tipo=0;
 
-    if(!strcmp(l->tipo, "fila"))
-    {
-
-        tipo=1;
-    }
-    else
-    {
-
-        if(!strcmp(l->tipo, "pilha"))
-        {
-            tipo=2;
-        }
-        else
-        {
-            printf("\nErro inesperado\n");
-        }
-    }
+    tipo = tipificador(l);
 
     do
     {
@@ -282,7 +266,7 @@ int menu(lista *l)
             stackpop(l, tipo);
             break;
         case 4:
-            printf("\nRegistros na memória:\n");
+            printf("\nRegistros na memÃ³ria:\n");
             mostrar_tudo(l);
             break;
         case 5:
@@ -294,19 +278,20 @@ int menu(lista *l)
             printf("\nExcluir %s:", l->tipo);
             if(excluir_op(l))
             {
-                return 1; //retornar 1 para limpar a lista principal, do qual essa função não tem acesso
+                return 1; //retornar 1 para limpar a lista principal, do qual essa funÃ§Ã£o nÃ£o tem acesso
             }
             break;
         case 7:
             printf("\nMudar tipo:");
             mudar_tipo(l);
+            tipo = tipificador(l);
             info(l);
             break;
         case 8:
             printf("\nSaindo da %s.\n", l->tipo);
             break;
         default:
-            printf("\nOpcão inválida!\n");
+            printf("\nOpcÃ£o invÃ¡lida!\n");
             break;
 
         }
@@ -316,10 +301,31 @@ int menu(lista *l)
 
     return 0;
 }
+
+int tipificador(lista *l)
+{
+    if(!strcmp(l->tipo, "fila"))
+    {
+        return 1;
+    }
+    else
+    {
+
+        if(!strcmp(l->tipo, "pilha"))
+        {
+            return 2;
+        }
+        else
+        {
+            printf("\nErro inesperado\n");
+        }
+    }
+}
+
 lista* aloca_lista()
 {
     /*
-        alocador universal de listas, mais especificamente a cabeça da lista
+        alocador universal de listas, mais especificamente a cabeÃ§a da lista
     */
     lista *temp=NULL;
     temp =(lista*)malloc(sizeof(lista));
@@ -344,15 +350,15 @@ registro* aloca_registro()
     return temp;
 }
 
-//declrações para usar na função abrir pilha/fila
+//declraÃ§Ãµes para usar na funÃ§Ã£o abrir pilha/fila
 lista* buscar_fun (lista *l, char *x, int y, int op);
 
 void abrir_fila_pilha (lista *listas)
 {
     /*
-        função responsavel por abrir filas e pilhas
-        na verdade ela apenar gerencia o uso da função buscar_por_filas e menu,
-        esse ultimo responsável pelas opreações realizadas dentro de uma fila,
+        funÃ§Ã£o responsavel por abrir filas e pilhas
+        na verdade ela apenar gerencia o uso da funÃ§Ã£o buscar_por_filas e menu,
+        esse ultimo responsÃ¡vel pelas opreaÃ§Ãµes realizadas dentro de uma fila,
     */
     lista *temp=NULL;
     int op=0, y=0;
@@ -360,12 +366,12 @@ void abrir_fila_pilha (lista *listas)
     registro *aux=NULL, *ant_temp=NULL;
     if (listas->qtd==0)
     {
-        printf("\nA lista está vazia!\n");
-        return NULL;
+        printf("\nA lista estÃ¡ vazia!\n");
+        return;
     }
     else
     {
-        printf("\nBuscar: (1) Nome, (2) Número: ");
+        printf("\nBuscar: (1) Nome, (2) NÃºmero: ");
         op=e_inteiro();
         if(op==1)
         {
@@ -381,7 +387,7 @@ void abrir_fila_pilha (lista *listas)
         {
             if(op==2)
             {
-                printf("Número: ");
+                printf("NÃºmero: ");
                 y=e_inteiro();
                 if(y>0)
                 {
@@ -389,28 +395,28 @@ void abrir_fila_pilha (lista *listas)
                 }
                 else
                 {
-                    printf("\nInválido! Insira um número maior que zero.\n");
+                    printf("\nInvÃ¡lido! Insira um nÃºmero maior que zero.\n");
                     temp=NULL;
                 }
             }
             else
             {
-                printf("\nOpção inválida!\n");
+                printf("\nOpÃ§Ã£o invÃ¡lida!\n");
                 temp=NULL;
             }
         }
         if(temp==NULL)
         {
-            //printf("\nNão foi possivel abrir está lista\n");
+            //printf("\nNÃ£o foi possivel abrir estÃ¡ lista\n");
         }
         else
         {
-            //return 1=alguma lista/pilha foi excluída
+            //return 1=alguma lista/pilha foi excluÃ­da
             if(menu(temp))
             {
                 //limpando lista principal
                 aux = listas->inicio;
-                if(aux->prox==NULL) //verifica se é o primeiro e ultimo
+                if(aux->prox==NULL) //verifica se Ã© o primeiro e ultimo
                 {
                     if(aux->endFila==temp)
                     {
@@ -431,7 +437,7 @@ void abrir_fila_pilha (lista *listas)
                             ant_temp=aux; //anterior
                             aux=aux->prox;
                         }
-                        //verificar se é o ultimo
+                        //verificar se Ã© o ultimo
                         ant_temp->prox=aux->prox;
                         free(aux);
                     }
@@ -449,13 +455,13 @@ void abrir_fila_pilha (lista *listas)
 
 }
 
-//declarações para usar na função buscar
+//declaraÃ§Ãµes para usar na funÃ§Ã£o buscar
 int comparar(char *x, char *y);
 
 lista* buscar_fun (lista *l, char *x, int y, int op)
 {
     /*
-        função para realizar buscar dentro da lista principal, a lista de filas/pilhas
+        funÃ§Ã£o para realizar buscar dentro da lista principal, a lista de filas/pilhas
     */
     registro *aux=NULL;
     int i=1;
@@ -468,7 +474,7 @@ lista* buscar_fun (lista *l, char *x, int y, int op)
             if (comparar(x, aux->endFila->nome))
             {
                 printf("\nEncontrado, abrindo.\n");
-                return aux->endFila; //retorna a cabeça da fila caso encontre x
+                return aux->endFila; //retorna a cabeÃ§a da fila caso encontre x
             }
             aux=aux->prox;
         }
@@ -477,7 +483,7 @@ lista* buscar_fun (lista *l, char *x, int y, int op)
     {
         if(op==2)
         {
-            //buscar pelo número informado
+            //buscar pelo nÃºmero informado
             while(aux!=NULL)
             {
                 if(i==y)
@@ -498,8 +504,8 @@ lista* buscar_fun (lista *l, char *x, int y, int op)
 int comparar(char *x, char *y)
 {
     /*
-        função para verificar a igualdade entre duas array
-        para o fim de pesquisa, x é a variavel mestre
+        funÃ§Ã£o para verificar a igualdade entre duas array
+        para o fim de pesquisa, x Ã© a variavel mestre
     */
     int i;
     for(i=0; i<strlen(x); i++)
@@ -516,17 +522,17 @@ int comparar(char *x, char *y)
     return 1;
 }
 /*
-    Abaixo as funções padrão push, pop, stackpop e mostras tudo
-    Basicamente as funções exclusiva para as filas
+    Abaixo as funÃ§Ãµes padrÃ£o push, pop, stackpop e mostras tudo
+    Basicamente as funÃ§Ãµes exclusiva para as filas
 */
 
-//declarações para usar na função push
+//declaraÃ§Ãµes para usar na funÃ§Ã£o push
 pessoa* criar_pessoa();
 
 void push(lista *l)
 {
     /*
-        função push padrão
+        funÃ§Ã£o push padrÃ£o
         exclusiva para as filas
     */
     pessoa *x = criar_pessoa(); //criar pessoa
@@ -558,7 +564,7 @@ pessoa* criar_pessoa()
 {
     /*
         exclusiva para as filas/pilhas
-        função para alocar e preencher formulário pessoa
+        funÃ§Ã£o para alocar e preencher formulÃ¡rio pessoa
     */
     pessoa *temp=NULL;
     int tipo=0;
@@ -587,13 +593,13 @@ void pop(lista *l, int tipo)
     registro *aux=NULL, *temp=NULL;
     if(l->qtd==0)
     {
-        printf("\nEstá %s está vazia!\n", l->tipo);
+        printf("\nEstÃ¡ %s estÃ¡ vazia!\n", l->tipo);
     }
     else
     {
         if(tipo==2)
         {
-            // tipo pilha, ultimo a entrar é primeiro a sair
+            // tipo pilha, ultimo a entrar Ã© primeiro a sair
             aux = l->inicio;
             if(aux->prox==NULL)
             {
@@ -612,27 +618,24 @@ void pop(lista *l, int tipo)
                 printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
                 free(aux->p); //liberar pessoa desse registro
                 free(aux); //liberar esse registro
-                temp->prox=NULL; //retira endereço desse registro do registro anterior
+                temp->prox=NULL; //retira endereÃ§o desse registro do registro anterior
             }
-
         }
         else
         {
             if(tipo==1)
             {
 
-                // tipo pilha, primeiro a entrar é o primeiro a sair
+                // tipo pilha, primeiro a entrar Ã© o primeiro a sair
                 aux = l->inicio;
-                printf("%s, %d anos.\n", aux->p->nome, aux->p->idade);
+                printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
                 l->inicio = aux->prox; //inicio recebe o proximo
                 free(aux->p); //libera pessoa
                 free(aux);
-
-                //
             }
             else
             {
-                printf("\nErro inesperado\n"); //Um erro inesperado é um erro que não estava no plano geral, que deveria ser impossivel de acontecer
+                printf("\nErro inesperado\n"); //Um erro inesperado Ã© um erro que nÃ£o estava no plano geral, que deveria ser impossivel de acontecer
             }
         }
         l->qtd--;
@@ -644,35 +647,31 @@ void stackpop(lista *l, int tipo)
     registro *aux=NULL, *temp=NULL;
     if(l->qtd==0)
     {
-        printf("\nEstá %s está vazia!\n", l->tipo);
+        printf("\nEstÃ¡ %s estÃ¡ vazia!\n", l->tipo);
     }
     else
     {
         if(tipo==2)
         {
-            // tipo pilha, ultimo a entrar é primeiro a sair
+            // tipo pilha, ultimo a entrar Ã© primeiro a sair
             aux = l->inicio;
             while(aux->prox!=NULL)
             {
-                temp=aux; //anterior
                 aux=aux->prox;
             }
             printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
-            //
         }
         else
         {
             if(tipo==1)
             {
-                // tipo pilha, primeiro a entrar é o primeiro a sair
+                // tipo pilha, primeiro a entrar Ã© o primeiro a sair
                 aux = l->inicio;
-                printf("%s, %d anos.\n", aux->p->nome, aux->p->idade);
-
-                //
+                printf("\n%s, %d anos.\n", aux->p->nome, aux->p->idade);
             }
             else
             {
-                printf("\nErro inesperado\n"); //Um erro inesperado é um erro que não estava no plano geral, que deveria ser impossivel de acontecer
+                printf("\nErro inesperado\n"); //Um erro inesperado Ã© um erro que nÃ£o estava no plano geral, que deveria ser impossivel de acontecer
             }
         }
     }
@@ -681,9 +680,9 @@ void stackpop(lista *l, int tipo)
 void mostrar_tudo(lista *l)
 {
     /*
-        função exclusiva para as filas/pilhas
+        funÃ§Ã£o exclusiva para as filas/pilhas
         visa mostrar todos os resgistro dentro daquela fila/pilhas
-        para a lista principal a função tulizada é a listar
+        para a lista principal a funÃ§Ã£o tulizada Ã© a listar
     */
     registro *aux=NULL;
     int i;
@@ -731,7 +730,7 @@ void mudar_tipo(lista *l)
         printf("pilha? ");
         do
         {
-            printf("(1) sim, (0) não: ");
+            printf("(1) sim, (0) nÃ£o: ");
             op=e_inteiro();
             if(op==1)
             {
@@ -741,7 +740,7 @@ void mudar_tipo(lista *l)
             {
                 if(op==0)
                 {
-                    printf("\nOperação cancelada!\n");
+                    printf("\nOperaÃ§Ã£o cancelada!\n");
                     return;
                 }
             }
@@ -755,7 +754,7 @@ void mudar_tipo(lista *l)
             printf("fila? ");
             do
             {
-                printf("(1) sim, (0) não: ");
+                printf("(1) sim, (0) nÃ£o: ");
                 op=e_inteiro();
                 if(op==1)
                 {
@@ -765,7 +764,7 @@ void mudar_tipo(lista *l)
                 {
                     if(op==0)
                     {
-                        printf("\nOperação cancelada!\n");
+                        printf("\nOperaÃ§Ã£o cancelada!\n");
                         return;
                     }
                 }
@@ -785,13 +784,13 @@ void info(lista *l)
     printf("\n[>] %s (%s) | %d Registros | %d Kb\n", l->nome, l->tipo, l->qtd, (sizeof(registro)+sizeof(pessoa))*(l->qtd) + sizeof(lista));
 }
 
-//declarações para usar na função excluir com opções
+//declaraÃ§Ãµes para usar na funÃ§Ã£o excluir com opÃ§Ãµes
 void fun_free(registro *aux);
 
 int excluir_op(lista *l)
 {
     /*
-        função para excluir pilhas/listas
+        funÃ§Ã£o para excluir pilhas/listas
     */
     int op=0, i=-1, qtd = l->qtd;
     registro *aux=NULL, *exc=NULL;
@@ -799,7 +798,7 @@ int excluir_op(lista *l)
     printf("\n");
     do
     {
-        printf("Certeza? (1) sim, (0) não: ");
+        printf("Certeza? (1) sim, (0) nÃ£o: ");
         op=e_inteiro();
     }
     while(op!=1 && op!=0);
@@ -812,7 +811,7 @@ int excluir_op(lista *l)
             fun_free(l->inicio);
         }
         free(l);
-        printf("\nExcluído!\n");
+        printf("\nExcluÃ­do!\n");
         return 1;
     }
     else
@@ -832,8 +831,7 @@ int excluir_op(lista *l)
 void fun_free(registro *aux)
 {
     /*
-        função desalocar recursiva, limpa do fim até o endereço passado por parametro
-
+        funÃ§Ã£o desalocar recursiva, limpa do fim atÃ© o endereÃ§o passado por parametro
     */
     free(aux->p);
     free(aux);
